@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="utf-8">
+ <title> Pizza Order</title>
+ <style>
+     .sum{
+        display: inline;
+        font-weight: bold;
+     }
+     form{
+         display: table-caption;
+     }
+     input.pizza{
+         height: 100px;
+         position: relative;
+         top: -50px;
+     }
+     #S{
+         height: 100px;
+     }
+     #M{
+         height: 120px;
+     }
+     #L{
+         height: 140px;
+     }
+     input.ingrid, input#noIngrid{
+         height: 50px;
+     }
+     #errorPhone{
+        display: none;
+        color: red;
+        width: 500px;
+     }
+     #errorAll{
+        display: none;
+        color: none;
+     }
+
+ </style>
+ <script> 
+    window.onload = init;
+    function init() {
+        
+    var pizzPrice = 0;
+    var ingPrice = 0;
+    var totalSum = document.getElementById("totalSum");
+    var pizza = document.getElementsByClassName("pizza");
+    var ingrids = document.getElementsByClassName("ingrid");
+    var noIngrid = document.getElementById("noIngrid");
+
+    document.getElementById("pizz1").onclick = pizz1onclick;
+    document.getElementById("pizz2").onclick = pizz2onclick;
+    document.getElementById("pizz3").onclick = pizz3onclick;
+    document.getElementById("noIngrid").onclick = noIngridonclick;
+    
+
+    function pizz1onclick(){
+        resetPizza();
+        var pizz1 = document.getElementById("pizz1");
+        pizz1.style.backgroundColor = "yellowgreen";
+        pizzPrice+=100;
+        totalSum.innerHTML=pizzPrice+ingPrice;
+    }
+    function pizz2onclick(){
+        resetPizza();
+        var pizz2 = document.getElementById("pizz2");
+        pizz2.style.backgroundColor = "yellowgreen";
+        pizzPrice+=150;
+        totalSum.innerHTML=pizzPrice+ingPrice;
+    }
+    function pizz3onclick(){
+        resetPizza();
+        var pizz3 = document.getElementById("pizz3");
+        pizz3.style.backgroundColor = "yellowgreen";
+        pizzPrice+=200;
+        totalSum.innerHTML=pizzPrice+ingPrice;
+    }
+    function resetPizza(){
+        for(var i=0;i<pizza.length;i++){
+            if(pizza[i].style.backgroundColor == "yellowgreen"){
+                pizza[i].style.backgroundColor = "#e5e5e5";
+                pizzPrice=0;
+            }
+        }
+    }
+    
+    function noIngridonclick(){
+        for(var i=0;i<ingrids.length;i++){
+            ingrids[i].style.backgroundColor = "#e5e5e5";
+        }
+        noIngrid.style.backgroundColor = "yellowgreen";
+        ingPrice=0;
+        totalSum.innerHTML=pizzPrice;
+    }
+    function noIngridreset(){
+        noIngrid.style.backgroundColor = "#e5e5e5";
+    }
+    function resetIngrids(){
+        for(var i=0;i<ingrids.length;i++){
+            if(ingrids[i].style.backgroundColor == "yellowgreen"){
+                ingrids[i].style.backgroundColor = "#e5e5e5";
+                ingPrice=0;
+            }
+        }
+    }
+    for(var i=0;i<ingrids.length;i++){
+        ingrids[i].onclick= function(){
+            var counter=[];
+            noIngridreset();
+            console.log(this);
+            if(this.style.backgroundColor == "yellowgreen"){
+            this.style.backgroundColor="#e5e5e5";
+            }
+            else {this.style.backgroundColor = "yellowgreen";}
+            var ingridsValue = this.value;
+            var e = ingridsValue.match(/\d+/);
+            ingPrice+=Number(e);
+            totalSum.innerHTML=Number(pizzPrice)+Number(ingPrice);
+            if(this.style.backgroundColor=="#e5e5e5"){
+                ingPrice-=Number(e)*2;
+                totalSum.innerHTML=Number(pizzPrice)+Number(ingPrice);
+            }
+    }  
+
+    var form = document.getElementsByTagName("form")[0],
+            inputs = document.getElementsByTagName("input"),
+            errorAll = document.getElementById("errorAll");
+        form.addEventListener('submit',function(e){
+            var marker=false;
+            for(var i=0;i<inputs.length;i++){
+                if(inputs[i].value.length !=0){
+                    continue;
+                }
+                else if (inputs[i].value.length ==0){
+                    marker = true;
+                }
+            }
+            if(marker){
+                e.preventDefault();
+                errorAll.style.display="block";
+            }else{
+                errorAll.style.display="none";
+            }
+        })
+
+    var phone = document.getElementById("phone"), 
+        errorPhone = document.getElementById("errorPhone"),
+        pattern = /[3][8]\d{10}/;
+    phone.onblur = function(){
+        if(pattern.test(phone.value)){
+        errorPhone.style.display = "none";
+        }
+        else{
+        errorPhone.style.display = "block";
+        }
+    }
+    }}
+</script>
+</head>
+<body>
+    <div class="pizzaChoise">
+        <input type="button" value="Маленькая 100грн." id="pizz1" class="pizza">
+        <img src="pizz.png" id="S" alt="S">
+        <input type="button" value="Средняя 150грн." id="pizz2" class="pizza">
+        <img src="pizz.png" id="M" alt="M">
+        <input type="button" value="Большая 200грн." id="pizz3" class="pizza">
+        <img src="pizz.png" id="L" alt="L">
+    </div>
+    <p>Добавить ингридиент:</p>
+    <div class="ingridients">
+        <input type="button" value="Без доп.ингридиентов" id="noIngrid">
+        <input type="button" value="Грибы 10грн." class="ingrid">
+        <input type="button" value="Бекон 20грн." class="ingrid">
+        <input type="button" value="Помидор 10грн." class="ingrid">
+        <input type="button" value="Сыр 20грн." class="ingrid">
+        <input type="button" value="Оливки 5грн." class="ingrid">
+    </div>
+    <br/>
+    <form>
+        Номера телефона:
+        <input type="tel" id="phone">
+        <span id="errorPhone">Укажите номера телефона в формате 38 000 000 00 00</span>
+        <br/>
+        Адрес:
+        <input type="text"><br/><br/>
+        <span id="errorAll">Все поля должны быть заполнены!</span>
+        <input type="submit" value="Заказать">
+    </form>
+    <br/>
+        <div class="sum">Сумма к оплате:</div>
+        <div class="sum"><span id="totalSum">0</span>грн.</div>
+</body>
+</html>
